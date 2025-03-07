@@ -24,15 +24,15 @@ async fn handle_not_found() -> HttpResponse {
 async fn main() -> std::io::Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    let apprise_url = match apprise::get_apprise_url() {
-        Some(h) => h,
+    let app_state = match state::AppState::new() {
+        Some(state) => state,
         None => {
-            log::error!("Invalid apprise host");
+            log::error!("Failed to initialize application state");
             exit(1);
         }
     };
 
-    let app_state = state::AppState { apprise_url };
+    info!("Starting server with Apprise tags: {}", app_state.apprise_tags);
 
     HttpServer::new(move || {
         App::new()
