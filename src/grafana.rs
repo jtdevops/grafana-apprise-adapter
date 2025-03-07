@@ -18,8 +18,9 @@ pub struct GrafanaPayload {
     pub message: String,
     pub state: GrafanaState,
 
-    #[serde(rename = "imageUrl")]
+    #[serde(rename = "imageUrl", default)]
     pub image: String,
 
+    #[serde(default)]
     pub tags: HashMap<String, String>,
 }

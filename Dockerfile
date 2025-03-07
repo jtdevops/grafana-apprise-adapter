@@ -1,4 +1,4 @@
-FROM rust:1 as builder
+FROM rust:1.75-slim AS builder
 
 WORKDIR /usr/src/grafana-apprise-adapter
 
@@ -8,7 +8,11 @@ COPY Cargo.lock /usr/src/grafana-apprise-adapter/Cargo.lock
 
 RUN cargo build --release
 
-FROM debian:buster-slim
+FROM ubuntu:22.04
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/src/grafana-apprise-adapter/target/release/grafana-apprise-adapter /usr/local/bin/grafana-apprise-adapter
 
